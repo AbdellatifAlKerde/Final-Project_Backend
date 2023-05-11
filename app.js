@@ -10,8 +10,9 @@ import userRoutes from "./routes/userRoutes.js";
 import driverRoutes from "./routes/driverRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-import factureRoutes from "./routes/factureRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import adsRoutes from "./routes/adsRoutes.js";
 dotenv.config();
 
 connectDB();
@@ -43,7 +44,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/driver", driverRoutes);
 app.use("/api/rest", restaurantRoutes);
 app.use("/api/order", orderRoutes);
-app.use("/api/facture", factureRoutes);
+app.use("/api/product", productRoutes);
+app.use("/api/ads", adsRoutes);
 
 app.listen(
   PORT,

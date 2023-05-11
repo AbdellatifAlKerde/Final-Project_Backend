@@ -1,6 +1,6 @@
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
-import Restaurant from "../models/restaurantModel.js";
+import Product from "../models/productModel.js";
 
 const getAllOrder = async (req, res, next) => {
   try {
@@ -48,18 +48,19 @@ const addOrder = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const restaurants = await Restaurant.find({
-      _id: { $in: req.body.restaurants },
+    const products = await Product.find({
+      _id: { $in: req.body.products },
     });
-    if (!restaurants || restaurants.length !== req.body.restaurants.length) {
+    if (!products || products.length !== req.body.products.length) {
       return res
         .status(404)
-        .json({ message: "One or more restaurants not found" });
+        .json({ message: "One or more products not found" });
     }
 
     const order = await Order.create({
       user: user._id,
-      restaurants: restaurants.map((p) => p._id),
+      products: products.map((p) => p._id),
+      total: req.body.total,
     });
 
     return res.status(201).json({ order });
@@ -78,7 +79,8 @@ const editOrder = async (req, res, next) => {
       {
         $set: {
           user: updates.user,
-          restaurants: updates.restaurants,
+          products: updates.products,
+          total: updates.total,
         },
       },
       options

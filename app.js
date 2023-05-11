@@ -6,6 +6,12 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import path from "path";
+import userRoutes from "./routes/userRoutes.js";
+import driverRoutes from "./routes/driverRoutes.js";
+import restaurantRoutes from "./routes/restaurantRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import factureRoutes from "./routes/factureRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 dotenv.config();
 
 connectDB();
@@ -14,9 +20,9 @@ const PORT = process.env.PORT || 5010;
 
 const app = new express();
 
-// const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -25,11 +31,19 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("API is running!");
 });
+
+app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/driver", driverRoutes);
+app.use("/api/rest", restaurantRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/facture", factureRoutes);
 
 app.listen(
   PORT,

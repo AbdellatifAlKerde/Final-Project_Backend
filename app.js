@@ -13,6 +13,8 @@ import orderRoutes from "./routes/orderRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import adsRoutes from "./routes/adsRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 dotenv.config();
 
 connectDB();
@@ -46,6 +48,8 @@ app.use("/api/rest", restaurantRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/ads", adsRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/category", categoryRoutes);
 
 app.listen(
   PORT,

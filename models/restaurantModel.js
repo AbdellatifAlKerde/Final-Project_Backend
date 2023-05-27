@@ -18,6 +18,10 @@ const restaurantSchema = new Schema(
       type: String,
       required: [true, "Location is required"],
     },
+    phone: {
+      type: Number,
+      unique: true,
+    },
     image: {
       type: String,
     },

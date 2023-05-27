@@ -1,7 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../controllers/authController.js";
-import jwt from "jsonwebtoken";
 
 //get all users
 export const getAllUsers = async (req, res, next) => {
@@ -48,9 +47,9 @@ export const getUserById = async (req, res, next) => {
 //User Registration
 export const register = async (req, res, next) => {
   try {
-    const { username, email, password, isAdmin, address } = req.body;
+    const { username, email, password, address, phone } = req.body;
 
-    if (!username || !email || !password || !address) {
+    if (!username || !email || !password || !address || !phone) {
       return res.status(400).json({
         message: "All inputs is required",
       });
@@ -67,6 +66,7 @@ export const register = async (req, res, next) => {
       email: email.toLowerCase(),
       password: password,
       address: address,
+      phone: phone,
     });
     await newUser
       .save()
@@ -129,7 +129,7 @@ export const login = async (req, res, next) => {
 //update a user by id
 export const editUser = async (req, res, next) => {
   let { id } = req.params;
-  const { username, email, password, address } = req.body;
+  const { username, email, password, phone, address } = req.body;
 
   try {
     // check if admin already exists
@@ -149,6 +149,7 @@ export const editUser = async (req, res, next) => {
         email: email.toLowerCase(),
         password: hashedPassword,
         address: address,
+        phone: phone,
       },
       {
         new: true,

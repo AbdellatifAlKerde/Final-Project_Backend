@@ -38,7 +38,7 @@ export const getAdminById = async (req, res, next) => {
     if (!admin) {
       throw new Error("Admin not found");
     }
-    res.status(200).json({ success: true, user });
+    res.status(200).json({ success: true, admin });
   } catch (error) {
     res.status(404).json({ success: false, message: error.message });
   }
@@ -48,12 +48,13 @@ export const getAdminById = async (req, res, next) => {
 export const register = async (req, res, next) => {
   try {
     const { username, password, isSuper } = req.body;
+    console.log(username, password, isSuper);
 
-    if (!username || !password || !isSuper) {
-      return res.status(400).json({
-        message: "All inputs is required",
-      });
-    }
+    // if (!username || !password || !isSuper) {
+    //   return res.status(400).json({
+    //     message: "All inputs is required",
+    //   });
+    // }
 
     const existingAdmin = await Admin.findOne({ username: req.body.username });
     if (existingAdmin)

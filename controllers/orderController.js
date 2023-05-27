@@ -41,6 +41,34 @@ const getOrder = async (req, res, next) => {
   }
 };
 
+// const addOrder = async (req, res, next) => {
+//   try {
+//     const user = await User.findById(req.body.user);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     const products = await Product.find({
+//       _id: { $in: req.body.products },
+//     });
+//     if (!products || products.length !== req.body.products.length) {
+//       return res
+//         .status(404)
+//         .json({ message: "One or more products not found" });
+//     }
+
+//     const order = await Order.create({
+//       user: user._id,
+//       products: products.map((p) => p._id),
+//       total: req.body.total,
+//     });
+
+//     return res.status(201).json({ order });
+//   } catch (err) {
+//     return res.status(400).send(err.message);
+//   }
+// };
+
 const addOrder = async (req, res, next) => {
   try {
     const user = await User.findById(req.body.user);
@@ -49,7 +77,7 @@ const addOrder = async (req, res, next) => {
     }
 
     const products = await Product.find({
-      _id: { $in: req.body.products },
+      _id: { $in: req.body.products.map((p) => p._id) },
     });
     if (!products || products.length !== req.body.products.length) {
       return res
@@ -59,7 +87,10 @@ const addOrder = async (req, res, next) => {
 
     const order = await Order.create({
       user: user._id,
-      products: products.map((p) => p._id),
+      products: req.body.products.map((p) => ({
+        _id: p._id,
+        quantity: p.quantity,
+      })),
       total: req.body.total,
     });
 

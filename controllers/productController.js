@@ -1,5 +1,6 @@
 import Product from "../models/productModel.js";
 import Restaurant from "../models/restaurantModel.js";
+import Category from "../models/categoryModel.js";
 import fs from "fs";
 
 const getAllProducts = async (req, res, next) => {
@@ -40,6 +41,16 @@ const getProduct = async (req, res, next) => {
   }
 };
 
+const getProductByCategory = async (req, res) => {
+  try {
+    const category = req.params.category;
+    const products = await Product.find({ category: category });
+    res.json({ items: products });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const addProduct = async (req, res, next) => {
   const { name, description, price, image } = req.body;
   try {
@@ -49,12 +60,19 @@ const addProduct = async (req, res, next) => {
       return res.status(404).json({ message: "Restaurant not found" });
     }
 
+    const category = await Category.findById(req.body.category);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
     const product = await Product.create({
       restaurant_id: restaurant._id,
       name: name,
       description: description,
       price: price,
       image: image,
+      category: category._id,
     });
 
     return res.status(201).json({ product });
@@ -81,6 +99,7 @@ const editProduct = async (req, res, next) => {
           description: updates.description,
           price: updates.price,
           image: updates.image,
+          category: updates.category,
         },
       },
       options
@@ -92,8 +111,8 @@ const editProduct = async (req, res, next) => {
 };
 
 const deleteProduct = async (req, res, next) => {
-  let { id } = req.params.id;
   try {
+    const id = req.params.id;
     const oldProduct = await Product.findById(id);
     if (!oldProduct) {
       return res.status(409).send({ message: "Product does not exists" });
@@ -114,4 +133,5 @@ export default {
   addProduct,
   editProduct,
   deleteProduct,
+  getProductByCategory,
 };

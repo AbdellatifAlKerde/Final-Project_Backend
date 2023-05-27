@@ -12,14 +12,20 @@ const orderSchema = new Schema(
     ],
     products: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        quantity: {
+          type: Number,
+        },
       },
     ],
     total: { type: Number },
   },
   {
     collection: "orders",
+    timestamps: true,
   }
 );
 
@@ -29,7 +35,7 @@ orderSchema.pre(["find", "findOne"], function () {
 });
 
 orderSchema.pre(["find", "findOne"], function () {
-  this.populate("products");
+  this.populate("products._id");
 });
 
 const Order = model("Order", orderSchema);

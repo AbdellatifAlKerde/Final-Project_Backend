@@ -8,17 +8,21 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: [true, "Username is required"],
+      // required: [true, "Username is required"],
       trim: true,
     },
     address: {
       type: String,
-      required: [true, "Address is required"],
+      // required: [true, "Address is required"],
       trim: true,
+    },
+    phone: {
+      type: Number,
+      // unique: [true, "Phone should be unique"],
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      // required: [true, "Email is required"],
     },
     password: { type: String, required: true },
   },

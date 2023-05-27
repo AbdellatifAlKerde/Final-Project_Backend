@@ -7,6 +7,7 @@ import { verifyUserToken } from "../middleware/verifyToken.js";
 router.get("/", verifyUserToken, controller.getAllUsers);
 router.get("/:id", controller.getUserById);
 router.put("/:id", controller.editUser);
+router.patch("/:id", controller.editUser);
 
 router.post("/register", controller.register);
 router.post("/login", controller.login);

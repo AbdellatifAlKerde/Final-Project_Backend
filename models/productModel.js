@@ -12,6 +12,10 @@ const productSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Restaurant",
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+    },
   },
   {
     collection: "products",
@@ -21,6 +25,10 @@ const productSchema = new Schema(
 productSchema.plugin(mongoosePaginate);
 productSchema.pre(["find", "findOne"], function () {
   this.populate("restaurant_id");
+});
+
+productSchema.pre(["find", "findOne"], function () {
+  this.populate("category");
 });
 
 const Product = model("Product", productSchema);

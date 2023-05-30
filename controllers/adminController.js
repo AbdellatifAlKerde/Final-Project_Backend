@@ -162,6 +162,55 @@ export const editAdmin = async (req, res, next) => {
   }
 };
 
+export const editUsername = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { username } = req.body;
+
+    const existingAdmin = await Admin.findOne({ username: req.body.username });
+    if (existingAdmin)
+      return res.status(409).json({
+        message: "Username exists",
+      });
+
+    const response = await Admin.findOneAndUpdate(
+      { _id: id },
+      {
+        username: username,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editPassword = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { password } = req.body;
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const response = await Admin.findOneAndUpdate(
+      { _id: id },
+      {
+        password: hashedPassword,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
 //delete user
 export const deleteAdmin = async (req, res, next) => {
   try {
@@ -186,6 +235,8 @@ const controller = {
   login,
   editAdmin,
   deleteAdmin,
+  editUsername,
+  editPassword,
 };
 
 export default controller;

@@ -1,4 +1,5 @@
 import Restaurant from "../models/restaurantModel.js";
+import Admin from "../models/adminModel.js";
 import fs from "fs";
 
 export async function getAll(req, res, next) {
@@ -45,7 +46,15 @@ export async function getRestaurantById(req, res) {
 export async function addRestaurant(req, res, next) {
   try {
     const { name, description, location, image } = req.body;
+
+    const admin = await Admin.findById(req.body.admin);
+
+    if (!admin) {
+      return res.status(404).json({ messaage: "Admin not found" });
+    }
+
     const restaurant = await Restaurant.create({
+      admin: admin._id,
       name: name,
       description: description,
       location: location,
@@ -63,7 +72,11 @@ export async function editRestaurant(req, res, next) {
   try {
     const oldRestaurant = await Restaurant.findById(id);
     console.log(req.body.image);
-    !req.body.image ? null : fs.unlinkSync(oldRestaurant.image);
+    !req.body.image
+      ? null
+      : oldRestaurant.image
+      ? fs.unlinkSync(oldRestaurant.image)
+      : null;
 
     const response = await Restaurant.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -74,6 +87,94 @@ export async function editRestaurant(req, res, next) {
     return next(err);
   }
 }
+
+export const editName = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { name } = req.body;
+
+    const response = await Restaurant.findOneAndUpdate(
+      { _id: id },
+      {
+        name: name,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editDescription = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { description } = req.body;
+
+    const response = await Restaurant.findOneAndUpdate(
+      { _id: id },
+      {
+        description: description,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editLocation = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { location } = req.body;
+
+    const response = await Restaurant.findOneAndUpdate(
+      { _id: id },
+      {
+        location: location,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editImage = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { image } = req.body;
+
+    const oldRestaurant = await Restaurant.findById(id);
+    console.log(req.body.image);
+    !req.body.image
+      ? null
+      : oldRestaurant.image
+      ? fs.unlinkSync(oldRestaurant.image)
+      : null;
+
+    const response = await Restaurant.findOneAndUpdate(
+      { _id: id },
+      {
+        image: image,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
 
 // delete product
 export async function deleteRestaurant(req, res, next) {
@@ -106,6 +207,10 @@ const controller = {
   getRestaurantById,
   editRestaurant,
   deleteRestaurant,
+  editName,
+  editDescription,
+  editLocation,
+  editImage,
 };
 
 export default controller;

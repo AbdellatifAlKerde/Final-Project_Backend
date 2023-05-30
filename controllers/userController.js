@@ -132,23 +132,87 @@ export const editUser = async (req, res, next) => {
   const { username, email, password, phone, address } = req.body;
 
   try {
-    // check if admin already exists
-    const oldUser = await User.findOne({ email });
+    // Check if email is provided
+    if (email) {
+      // Check if user with the provided email already exists
+      const oldUser = await User.findOne({ email });
 
-    if (oldUser) {
-      return res.status(409).send("User already exists, please login");
+      if (oldUser) {
+        return res.status(409).send("User already exists, please login");
+      }
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    // password = hashedPassword;
+    const updateFields = {
+      username,
+      password: await bcrypt.hash(password, 10),
+      address,
+      phone,
+    };
+
+    // Conditionally add email field to the update object
+    if (email) {
+      updateFields.email = email.toLowerCase();
+    }
+
+    const response = await User.findOneAndUpdate({ _id: id }, updateFields, {
+      new: true,
+    });
+
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    console.log(err);
+    return next(err);
+  }
+};
+
+export const editUsername = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { username } = req.body;
+
     const response = await User.findOneAndUpdate(
       { _id: id },
       {
         username: username,
-        email: email.toLowerCase(),
-        password: hashedPassword,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editAddress = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { address } = req.body;
+
+    const response = await User.findOneAndUpdate(
+      { _id: id },
+      {
         address: address,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editPhone = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { phone } = req.body;
+
+    const response = await User.findOneAndUpdate(
+      { _id: id },
+      {
         phone: phone,
       },
       {
@@ -157,7 +221,56 @@ export const editUser = async (req, res, next) => {
     );
     res.status(200).send({ success: true, response });
   } catch (err) {
-    console.log(err);
+    return next(err);
+  }
+};
+
+export const editEmail = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { email } = req.body;
+
+    // check if admin already exists
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser) {
+      return res.status(409).send("User already exists, please login");
+    }
+
+    const response = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        email: email.toLowerCase(),
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const editPassword = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { password } = req.body;
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const response = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        password: hashedPassword,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
     return next(err);
   }
 };
@@ -186,6 +299,11 @@ const controller = {
   login,
   editUser,
   deleteUser,
+  editUsername,
+  editAddress,
+  editPhone,
+  editEmail,
+  editPassword,
 };
 
 export default controller;

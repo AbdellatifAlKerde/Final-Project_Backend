@@ -86,8 +86,12 @@ const editProduct = async (req, res, next) => {
     const productId = req.params.id;
 
     const oldProduct = await Product.findById(productId);
-    !req.body.image ? null : fs.unlinkSync(oldProduct.image);
-
+    // !req.body.image ? null : fs.unlinkSync(oldProduct.image);
+    !req.body.image
+      ? null
+      : oldProduct.image
+      ? fs.unlinkSync(oldProduct.image)
+      : null;
     const updates = req.body;
     const options = { new: true };
     const updatedProduct = await Product.findByIdAndUpdate(

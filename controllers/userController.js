@@ -144,10 +144,14 @@ export const editUser = async (req, res, next) => {
 
     const updateFields = {
       username,
-      password: await bcrypt.hash(password, 10),
       address,
       phone,
     };
+
+    // Add password field to the update object if provided
+    if (password) {
+      updateFields.password = await bcrypt.hash(password, 10);
+    }
 
     // Conditionally add email field to the update object
     if (email) {

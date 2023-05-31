@@ -43,13 +43,43 @@ const getProduct = async (req, res, next) => {
 
 const getProductByCategory = async (req, res) => {
   try {
-    const category = req.params.category;
-    const products = await Product.find({ category: category });
-    res.json({ items: products });
+    const categoryId = req.params.categoryId;
+    const { page, limit } = req.query;
+
+    // Set default values for page and limit if not provided
+    const pageNumber = parseInt(page) || 1;
+    const pageSize = parseInt(limit) || 10;
+
+    const options = {
+      page: pageNumber,
+      limit: pageSize,
+    };
+
+    const { docs, totalDocs, totalPages } = await Product.paginate(
+      { category: categoryId },
+      options
+    );
+
+    res.json({
+      items: docs,
+      totalItems: totalDocs,
+      totalPages: totalPages,
+      currentPage: pageNumber,
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// const getProductByCategory = async (req, res) => {
+//   try {
+//     const category = req.params.category;
+//     const products = await Product.find({ category: category });
+//     res.json({ items: products });
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// };
 
 const addProduct = async (req, res, next) => {
   const { name, description, price, image } = req.body;

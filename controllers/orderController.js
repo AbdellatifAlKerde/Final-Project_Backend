@@ -122,6 +122,50 @@ const editOrder = async (req, res, next) => {
   }
 };
 
+// const editOrderStatus = async (req, res) => {
+//   try {
+//     let id = req.params.id;
+//     const { status } = req.body;
+//     const response = await Order.findByIdAndUpdate(
+//       { _id: id },
+//       {
+//         products: req.body.products.map((p) => ({
+//           status: p.status,
+//         })),
+//       },
+//       {
+//         new: true,
+//       }
+//     );
+//     res.status(200).send({ success: true, response });
+//   } catch (err) {
+//     return res.status(400).send(err.message);
+//   }
+// };
+
+const editOrderStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status } = req.body; // Assuming you receive the status in the request body
+
+    const response = await Order.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: { "products.$[].status": status }, // Update the status of all products within the order
+      },
+      { new: true }
+    );
+
+    if (!response) {
+      return res.status(404).send("Order not found");
+    }
+
+    res.status(200).send({ success: true, response });
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
+};
+
 const deleteOrder = async (req, res, next) => {
   let id = req.params.id;
   try {
@@ -138,4 +182,5 @@ export default {
   addOrder,
   editOrder,
   deleteOrder,
+  editOrderStatus,
 };

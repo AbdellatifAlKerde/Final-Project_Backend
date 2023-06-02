@@ -47,7 +47,7 @@ export const getAdminById = async (req, res, next) => {
 //User Registration
 export const register = async (req, res, next) => {
   try {
-    const { username, password, isSuper } = req.body;
+    const { username, password, isSuper, isActive } = req.body;
     console.log(username, password, isSuper);
 
     // if (!username || !password || !isSuper) {
@@ -66,6 +66,7 @@ export const register = async (req, res, next) => {
       username: username,
       password: password,
       isSuper: isSuper,
+      isActive: isActive,
     });
     await newAdmin
       .save()
@@ -131,7 +132,7 @@ export const login = async (req, res, next) => {
 //update a user by id
 export const editAdmin = async (req, res, next) => {
   let { id } = req.params;
-  const { username, password, isSuper } = req.body;
+  const { username, password, isSuper, isActive } = req.body;
 
   try {
     // check if admin already exists
@@ -150,6 +151,7 @@ export const editAdmin = async (req, res, next) => {
         username: username,
         password: hashedPassword,
         isSuper: isSuper,
+        isActive: isActive,
       },
       {
         new: true,
@@ -158,6 +160,26 @@ export const editAdmin = async (req, res, next) => {
     res.status(200).send({ success: true, response });
   } catch (err) {
     console.log(err);
+    return next(err);
+  }
+};
+
+export const editActive = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    const { isActive } = req.body;
+
+    const response = await Admin.findOneAndUpdate(
+      { _id: id },
+      {
+        isActive: isActive,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).send({ success: true, response });
+  } catch (err) {
     return next(err);
   }
 };
@@ -237,6 +259,7 @@ const controller = {
   deleteAdmin,
   editUsername,
   editPassword,
+  editActive,
 };
 
 export default controller;

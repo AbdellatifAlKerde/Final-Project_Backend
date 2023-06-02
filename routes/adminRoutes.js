@@ -8,6 +8,7 @@ router.get("/:id", controller.getAdminById);
 router.put("/:id", controller.editAdmin);
 router.patch("/username/:id", controller.editUsername);
 router.patch("/password/:id", controller.editPassword);
+router.patch("/activate/:id", controller.editActive);
 
 router.post("/register", controller.register);
 router.post("/login", controller.login);

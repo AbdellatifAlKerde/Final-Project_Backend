@@ -19,6 +19,11 @@ const orderSchema = new Schema(
         quantity: {
           type: Number,
         },
+        status: {
+          type: String,
+          enum: ["pending", "delivered"],
+          default: "pending",
+        },
       },
     ],
     total: { type: Number },

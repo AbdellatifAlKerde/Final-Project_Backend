@@ -14,6 +14,7 @@ const adminSchema = new Schema(
     },
     password: { type: String, required: true },
     isSuper: { type: Boolean, required: true },
+    isActive: { type: Boolean, default: true },
   },
   {
     collection: "admins",

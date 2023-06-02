@@ -61,7 +61,6 @@ class Controller {
     let { id } = req.params;
     try {
       const oldCategory = await Category.findById(req.params.id);
-      !req.body.image ? null : fs.unlinkSync(oldCategory.image);
       const response = await Category.findOneAndUpdate({ _id: id }, req.body, {
         new: true,
       });
@@ -79,7 +78,6 @@ class Controller {
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
       }
-      !req.body.image ? null : fs.unlinkSync(category.image);
 
       res.json({ message: "Category deleted successfully" });
     } catch (error) {

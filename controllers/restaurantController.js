@@ -72,11 +72,11 @@ export async function editRestaurant(req, res, next) {
   try {
     const oldRestaurant = await Restaurant.findById(id);
     console.log(req.body.image);
-    !req.body.image
-      ? null
-      : oldRestaurant.image
-      ? fs.unlinkSync(oldRestaurant.image)
-      : null;
+    // !req.body.image
+    //   ? null
+    //   : oldRestaurant.image
+    //   ? fs.unlinkSync(oldRestaurant.image)
+    //   : null;
 
     const response = await Restaurant.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -155,11 +155,11 @@ export const editImage = async (req, res, next) => {
 
     const oldRestaurant = await Restaurant.findById(id);
     console.log(req.body.image);
-    !req.body.image
-      ? null
-      : oldRestaurant.image
-      ? fs.unlinkSync(oldRestaurant.image)
-      : null;
+    // !req.body.image
+    //   ? null
+    //   : oldRestaurant.image
+    //   ? fs.unlinkSync(oldRestaurant.image)
+    //   : null;
 
     const response = await Restaurant.findOneAndUpdate(
       { _id: id },
@@ -184,8 +184,6 @@ export async function deleteRestaurant(req, res, next) {
     if (!oldRestaurant) {
       return res.status(409).send({ message: "Restaurant does not exists" });
     }
-
-    !oldRestaurant.image ? null : fs.unlinkSync(oldRestaurant.image);
 
     const response = await Restaurant.findOneAndDelete({ _id: id }, req.body, {
       new: true,

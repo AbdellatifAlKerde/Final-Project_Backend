@@ -117,11 +117,11 @@ const editProduct = async (req, res, next) => {
 
     const oldProduct = await Product.findById(productId);
     // !req.body.image ? null : fs.unlinkSync(oldProduct.image);
-    !req.body.image
-      ? null
-      : oldProduct.image
-      ? fs.unlinkSync(oldProduct.image)
-      : null;
+    // !req.body.image
+    //   ? null
+    //   : oldProduct.image
+    //   ? fs.unlinkSync(oldProduct.image)
+    //   : null;
     const updates = req.body;
     const options = { new: true };
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -151,8 +151,6 @@ const deleteProduct = async (req, res, next) => {
     if (!oldProduct) {
       return res.status(409).send({ message: "Product does not exists" });
     }
-
-    !oldProduct.image ? null : fs.unlinkSync(oldProduct.image);
 
     let response = await Product.findByIdAndRemove({ _id: id });
     res.status(200).send({ success: true, response });

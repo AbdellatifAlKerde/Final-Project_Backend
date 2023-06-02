@@ -6,8 +6,8 @@ import { uploadImage } from "../middleware/image.js";
 router.get("/", controller.getAllProducts);
 router.get("/:id", controller.getProduct);
 router.get("/category/:categoryId", controller.getProductByCategory);
-router.post("/", uploadImage, controller.addProduct);
-router.put("/:id", uploadImage, controller.editProduct);
+router.post("/", controller.addProduct);
+router.put("/:id", controller.editProduct);
 router.delete("/:id", controller.deleteProduct);
 
 export default router;

@@ -3,7 +3,7 @@ import Restaurant from "../models/restaurantModel.js";
 import Category from "../models/categoryModel.js";
 import fs from "fs";
 
-const getAllProducts = async (req, res, next) => {
+const getAll = async (req, res, next) => {
   try {
     const { page, limit } = req.query;
 
@@ -28,6 +28,15 @@ const getAllProducts = async (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+};
+
+const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch products" });
   }
 };
 
@@ -160,6 +169,7 @@ const deleteProduct = async (req, res, next) => {
 };
 
 export default {
+  getAll,
   getAllProducts,
   getProduct,
   addProduct,

@@ -30,6 +30,15 @@ const getAllOrder = async (req, res, next) => {
   }
 };
 
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch orders" });
+  }
+};
+
 const getOrder = async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -178,6 +187,7 @@ const deleteOrder = async (req, res, next) => {
 
 export default {
   getAllOrder,
+  getAllOrders,
   getOrder,
   addOrder,
   editOrder,

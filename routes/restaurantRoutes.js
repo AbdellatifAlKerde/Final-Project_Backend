@@ -4,6 +4,7 @@ import controller from "../controllers/restaurantController.js";
 import { uploadImage } from "../middleware/image.js";
 
 router.get("/", controller.getAll);
+router.get("/all", controller.getAllRestaurants);
 router.get("/:id", controller.getRestaurantById);
 
 router.put("/:id", controller.editRestaurant);

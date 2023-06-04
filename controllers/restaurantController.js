@@ -29,6 +29,15 @@ export async function getAll(req, res, next) {
   }
 }
 
+export async function getAllRestaurants(req, res) {
+  try {
+    const restaurants = await Restaurant.find({});
+    res.json(restaurants);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch restaurants" });
+  }
+}
+
 export async function getRestaurantById(req, res) {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
@@ -201,6 +210,7 @@ export async function deleteRestaurant(req, res, next) {
 
 const controller = {
   getAll,
+  getAllRestaurants,
   addRestaurant,
   getRestaurantById,
   editRestaurant,

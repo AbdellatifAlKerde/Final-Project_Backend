@@ -13,8 +13,8 @@ class Controller {
     }
   };
 
-  // Get all categories
-  getAllCategories = async (req, res, next) => {
+  // Get all categories with pagination
+  getAll = async (req, res, next) => {
     try {
       const { page, limit } = req.query;
 
@@ -39,6 +39,16 @@ class Controller {
       });
     } catch (err) {
       next(err);
+    }
+  };
+
+  // Get all categories without pagination
+  getAllCategories = async (req, res) => {
+    try {
+      const categories = await Category.find({});
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch categories" });
     }
   };
 
